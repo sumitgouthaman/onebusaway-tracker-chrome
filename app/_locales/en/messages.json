@@ -1,0 +1,14 @@
+{
+  "appName": {
+    "message": "OneBusAway bus stop tracker",
+    "description": "The name of the application"
+  },
+  "appShortName": {
+    "message": "OneBusAway Tracker",
+    "description": "The short name of the application"
+  },
+  "appDescription": {
+    "message": "Track arrival times at bus stops near you. Powered by OneBusAway (https://onebusaway.org).",
+    "description": "The description of the application"
+  }
+}

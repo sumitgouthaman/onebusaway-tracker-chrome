@@ -1,0 +1,15 @@
+body {
+  width: 500px;
+}
+
+.paddingTop10 {
+  padding-top: 10px;
+}
+
+.oba-title {
+  color: #78aa36;
+}
+
+.pointer {
+  cursor: pointer;
+}

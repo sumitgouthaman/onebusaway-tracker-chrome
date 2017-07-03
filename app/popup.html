@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="styles/external/bootstrap.min.css" rel="stylesheet">
+  <link href="styles/main.css" rel="stylesheet">
+  <script type="text/javascript" src="apikey.js"></script>
+  <script type="text/javascript" src="js/external/angular.min.js"></script>
+  <script type="text/javascript" src="js/external/lodash.min.js"></script>
+  <script type="text/javascript" src="js/external/moment.min.js"></script>
+  <script type="text/javascript" src="js/popup.js"></script>
+</head>
+
+<body ng-app="oba" ng-controller="popup">
+  <div class="container">
+    <h1 class="text-center oba-title">{{chrome.i18n.getMessage('appShortName')}}</h1>
+    <div class="panel panel-success" ng-repeat="stop in stops">
+      <div class="panel-heading">
+        {{stop.name}}
+        <button type="button" class="close" aria-label="Close" ng-click="removeStop(stop)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="panel-body" ng-if="!stop.upcomingBuses.length">
+        <p ng-if="!stop.loading">No upcoming buses found.</p>
+        <p ng-if="stop.loading">Loading &hellip;</p>
+      </div>
+      <table class="table table-condensed" ng-if="stop.upcomingBuses.length">
+        <thead>
+          <tr>
+            <th>Bus #</th>
+            <th>Towards</th>
+            <th>Scheduled</th>
+            <th>Predicted</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="bus in stop.upcomingBuses track by $index">
+            <td>{{bus.routeShortName}}</td>
+            <td>{{bus.tripHeadsign}}</td>
+            <td>{{getTimeMinsLeft(bus.scheduledArrivalTime)}}</td>
+            <td>{{getTimeMinsLeft(bus.predictedArrivalTime)}}</td>
+          </tr>
+          </thead>
+        </tbody>
+      </table>
+    </div>
+    <p ng-if="!stops.length">No stops added yet.</p>
+    <hr/>
+    <p ng-if="!nearbyStops && loadingNearbyStops">Loading nearby stops &hellip;</p>
+    <p ng-if="!nearbyStops && nearbyStopsFailedAtLeastOnce" class="text-danger">Could not fetch nearby stops.
+      <span ng-if="!nearbyStopsNoMoreRetries">Retried 3 times.</span>
+      <span ng-if="!nearbyStopsNoMoreRetries">Will retry &hellip;</span>
+    </p>
+    <p ng-if="locationUnavailable" class="text-danger">Cannot get location.</p>
+    <div ng-if="nearbyStops" class="panel panel-success">
+      <div class="panel-heading">
+        Add Nearby stops
+      </div>
+      <table class="table table-condensed table-hover">
+        <thead>
+          <tr>
+            <th>Stop</th>
+            <th>Direction</th>
+            <th>Stop#</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="pointer" ng-repeat="nearbyStop in nearbyStops track by $index" ng-click="addStop(nearbyStop.id, nearbyStop.formattedName)">
+            <td>{{nearbyStop.name}}</td>
+            <td>{{nearbyStop.formattedDirection}}</td>
+            <td>{{nearbyStop.code}}</td>
+          </tr>
+          </thead>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <small>
+        <p class="text-center">Powered by <a href="https://onebusaway.org/" target="_blank">https://onebusaway.org/</a></p>
+      </small>
+    </div>
+  </div>
+</body>
+
+</html>
