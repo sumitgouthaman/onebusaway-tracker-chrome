@@ -5,7 +5,7 @@
   "manifest_version": 2,
   "description": "__MSG_appDescription__",
   "author": "Sumit Gouthaman",
-  "homepage_url": "http://path/to/homepage", // TODO
+  "homepage_url": "https://github.com/sumitgouthaman/onebusaway-tracker-chrome",
   "icons": {
     "16": "images/icon-16.png",
     "32": "images/icon-32.png",
