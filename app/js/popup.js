@@ -92,7 +92,41 @@ app.controller('popup', ['$scope', '$http', '$timeout', function ($scope, $http,
         }
     };
 
-    formatDirection = function (direction) {
+    let loadStopNumQueryResults = function (stopNumQuery) {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                let latitude = position.coords.latitude;
+                let longitude = position.coords.longitude;
+                $http({
+                    'method': 'GET',
+                    'url': `${API_URL}/api/where/stops-for-location.json`,
+                    'params': {
+                        'key': KEY,
+                        'lat': latitude,
+                        'lon': longitude,
+                        'query': stopNumQuery
+                    }
+                }).then(function (response) {
+                    if (!_.isEmpty(response.data.data.list)) {
+                        $scope.stopNumQueryResult = response.data.data.list[0];
+                        $scope.stopNumQueryResult.formattedDirection = formatDirection($scope.stopNumQueryResult.direction);
+                        $scope.stopNumQueryResult.formattedName = formatStopName($scope.stopNumQueryResult);
+                    } else {
+                        $scope.stopNumQueryError = `Stop with # ${stopNumQuery} not found.`;
+                    }
+                    $scope.$applyAsync();
+                }).catch(function () {
+                    console.log(`Request for nearby stops rejected - loadStopNumQueryResults.`);
+                    $scope.stopNumQueryError = "Could not load stop info.";
+                });
+            });
+        } else {
+            $scope.stopNumQueryError = "Cannot fetch stop info without location permission.";
+            console.log('Location unavailable - loadStopNumQueryResults.');
+        }
+    }
+
+    let formatDirection = function (direction) {
         if (direction) {
             switch (direction) {
                 case 'N':
@@ -103,14 +137,16 @@ app.controller('popup', ['$scope', '$http', '$timeout', function ($scope, $http,
                     return 'West';
                 case 'E':
                     return 'East';
+                default:
+                    return direction;
             }
         }
     }
 
-    formatStopName = function (stop) {
+    let formatStopName = function (stop) {
         let name = stop.name;
         if (stop.direction) {
-            name += ` ( ${formatDirection(stop.direction)} bound)`;
+            name += ` (${formatDirection(stop.direction)} bound)`;
         }
         return name;
     }
@@ -163,6 +199,17 @@ app.controller('popup', ['$scope', '$http', '$timeout', function ($scope, $http,
         }
         let day = moment(unixTime);
         return day.fromNow();
+    }
+
+    $scope.searchStopNumber = function (stopNumQuery) {
+        $scope.stopNumQueryError = null;
+
+        if (!stopNumQuery || !$.isNumeric(stopNumQuery)) {
+            $scope.stopNumQueryError = "Stop number is invalid!";
+            return;
+        }
+
+        loadStopNumQueryResults(stopNumQuery);
     }
 
     chrome.storage.sync.get('storedStops', function (data) {

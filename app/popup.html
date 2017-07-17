@@ -11,6 +11,8 @@
   <script type="text/javascript" src="js/external/angular.min.js"></script>
   <script type="text/javascript" src="js/external/lodash.min.js"></script>
   <script type="text/javascript" src="js/external/moment.min.js"></script>
+  <script type="text/javascript" src="js/external/jquery.min.js"></script>
+  <script type="text/javascript" src="js/external/bootstrap.min.js"></script>
   <script type="text/javascript" src="js/popup.js"></script>
 </head>
 
@@ -78,9 +80,43 @@
         </tbody>
       </table>
     </div>
+    <a class="btn btn-default btn-xs marginBottom10" role="button" data-toggle="collapse" href="#addStopAdvanced" aria-expanded="false"
+      aria-controls="advancedAddStops">
+      Search stop
+    </a>
+    <div class="collapse" id="addStopAdvanced">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Stop #" ng-model="stopNumQuery">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button" ng-click="searchStopNumber(stopNumQuery)">Search Stop Number</button>
+        </span>
+      </div>
+      <p class="text-danger" ng-if="stopNumQueryError">
+        {{stopNumQueryError}}
+      </p>
+      <div class="panel panel-default" ng-if="!stopNumQueryError && stopNumQueryResult">
+        <table class="table table-condensed table-hover">
+          <thead>
+            <tr>
+              <th>Stop</th>
+              <th>Direction</th>
+              <th>Stop#</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="pointer" ng-click="addStop(stopNumQueryResult.id, stopNumQueryResult.formattedName)">
+              <td>{{stopNumQueryResult.name}}</td>
+              <td>{{stopNumQueryResult.formattedDirection}}</td>
+              <td>{{stopNumQueryResult.code}}</td>
+            </tr>
+            </thead>
+          </tbody>
+        </table>
+      </div>
+    </div>
     <div>
       <small>
-        <p class="text-center">Powered by <a href="https://onebusaway.org/" target="_blank">https://onebusaway.org/</a></p>
+        <p class="text-center paddingTop10">Powered by <a href="https://onebusaway.org/" target="_blank">https://onebusaway.org/</a></p>
       </small>
     </div>
   </div>

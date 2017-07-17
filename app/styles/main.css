@@ -6,6 +6,10 @@ body {
   padding-top: 10px;
 }
 
+.marginBottom10 {
+  margin-bottom: 10px;
+}
+
 .oba-title {
   color: #78aa36;
 }
