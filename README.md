@@ -1,3 +1,8 @@
+Deprecated
+==========
+I decided to abandon this and re-write with Angular 2 and material design.
+Refer: https://github.com/sumitgouthaman/onebusaway-chrome-angular2
+
 OneBusAway Tracker Chrome extension
 ===================================
 This is a handy little extension that lets you monitor bus stops near you for
